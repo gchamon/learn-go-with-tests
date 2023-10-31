@@ -1,14 +1,18 @@
 package arrays
 
-import "testing"
+import (
+	"learn/util"
+	"testing"
+)
 
 func TestSum(t *testing.T) {
-	numbers := [5]int{1, 2, 3, 4, 5}
+	t.Run("array of five numbers", func(t *testing.T) {
 
-	got := Sum(numbers)
-	want := 15
+		numbers := []int{1, 2, 3, 4, 5}
 
-	if got != want {
-		t.Errorf("got %d, want %d, given %v", got, want, numbers)
-	}
+		got := Sum(numbers)
+		want := 15
+
+		util.AssertCorrectMessageIntGivenArray(t, got, want, numbers)
+	})
 }
