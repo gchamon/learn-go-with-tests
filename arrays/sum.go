@@ -1,11 +1,9 @@
 package arrays
 
-func Sum(numbers []int) int {
-	result := 0
+import "github.com/mariomac/gostream/stream"
 
-	for _, i := range numbers {
-		result += i
-	}
+func Sum(numbers []int) int {
+	result, _ := stream.OfSlice(numbers).Reduce(func(a, b int) int { return a + b })
 
 	return result
 }
