@@ -21,7 +21,7 @@ func TestSum(t *testing.T) {
 
 func TestSumAll(t *testing.T) {
 	got := SumAll([]int{1, 2, 3}, []int{4, 5, 6})
-	want := "bob"
+	want := []int{6, 15}
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got %v, want %v", got, want)
