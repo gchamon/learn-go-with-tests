@@ -1,7 +1,7 @@
 package arrays
 
 import (
-	"learn/util"
+	"reflect"
 	"testing"
 )
 
@@ -13,6 +13,17 @@ func TestSum(t *testing.T) {
 		got := Sum(numbers)
 		want := 15
 
-		util.AssertCorrectMessageIntGivenArray(t, got, want, numbers)
+		if got != want {
+			t.Errorf("got %d, want %d, given %v", got, want, numbers)
+		}
 	})
+}
+
+func TestSumAll(t *testing.T) {
+	got := SumAll([]int{1, 2, 3}, []int{4, 5, 6})
+	want := []int{6, 15}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v, want %v", got, want)
+	}
 }
