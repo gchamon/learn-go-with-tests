@@ -31,3 +31,33 @@ func SumAllTails(arrayOfSlices ...[]int) []int {
 
 	return pipe.Map(pipeArrayOfTails, Sum).Do()
 }
+
+func SumIt(numbers []int) int {
+	result := 0
+
+	for _, n := range numbers {
+		result += n
+	}
+
+	return result
+}
+
+func SumAllIt(arrayOfSlices ...[]int) []int {
+	var result []int
+
+	for _, numbers := range arrayOfSlices {
+		result = append(result, SumIt(numbers))
+	}
+
+	return result
+}
+
+func SumAllTailsIt(arrayOfSlices ...[]int) []int {
+	var result []int
+
+	for _, numbers := range arrayOfSlices {
+		result = append(result, SumIt(tail(numbers)))
+	}
+
+	return result
+}
