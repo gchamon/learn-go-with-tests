@@ -1,11 +1,13 @@
 package arrays
 
-import "github.com/mariomac/gostream/stream"
+import (
+	"github.com/koss-null/funcfrog/pkg/pipe"
+)
 
 func Sum(numbers []int) int {
-	result, _ := stream.OfSlice(numbers).Reduce(func(a, b int) int { return a + b })
+	result := pipe.Slice(numbers).Reduce(func(x, y *int) int { return *x + *y })
 
-	return result
+	return *result
 }
 
 func SumAll(arrayOfSlices ...[]int) []int {
