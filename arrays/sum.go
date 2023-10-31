@@ -11,11 +11,9 @@ func Sum(numbers []int) int {
 }
 
 func SumAll(arrayOfSlices ...[]int) []int {
-	var sumOfSlices []int
+	result := pipe.
+		Map(pipe.Slice(arrayOfSlices), Sum).
+		Do()
 
-	for _, slice := range arrayOfSlices {
-		sumOfSlices = append(sumOfSlices, Sum(slice))
-	}
-
-	return sumOfSlices
+	return result
 }
