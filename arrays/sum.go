@@ -8,6 +8,13 @@ func sum(x, y *int) int {
 	return *x + *y
 }
 
+func fillSlice(slice []int) []int {
+	if len(slice) < 2 {
+		return append(slice, []int{0, 0}...)
+	}
+	return slice
+}
+
 func Sum(numbers []int) int {
 	result := pipe.Slice(numbers).Reduce(sum)
 
@@ -16,7 +23,7 @@ func Sum(numbers []int) int {
 
 func SumAll(arrayOfSlices ...[]int) []int {
 	result := pipe.
-		Map(pipe.Slice(arrayOfSlices), Sum).
+		Map(pipe.Slice(arrayOfSlices).Map(fillSlice), Sum).
 		Do()
 
 	return result
@@ -27,7 +34,7 @@ func tail(slice []int) []int {
 }
 
 func SumAllTails(arrayOfSlices ...[]int) []int {
-	pipeArrayOfTails := pipe.Map(pipe.Slice(arrayOfSlices), tail)
+	pipeArrayOfTails := pipe.Map(pipe.Slice(arrayOfSlices).Map(fillSlice), tail)
 
 	return pipe.Map(pipeArrayOfTails, Sum).Do()
 }
@@ -46,7 +53,7 @@ func SumAllIt(arrayOfSlices ...[]int) []int {
 	var result []int
 
 	for _, numbers := range arrayOfSlices {
-		result = append(result, SumIt(numbers))
+		result = append(result, SumIt(fillSlice(numbers)))
 	}
 
 	return result
@@ -56,7 +63,7 @@ func SumAllTailsIt(arrayOfSlices ...[]int) []int {
 	var result []int
 
 	for _, numbers := range arrayOfSlices {
-		result = append(result, SumIt(tail(numbers)))
+		result = append(result, SumIt(tail(fillSlice(numbers))))
 	}
 
 	return result
