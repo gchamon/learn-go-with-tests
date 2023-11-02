@@ -20,11 +20,12 @@ func TestSum(t *testing.T) {
 }
 
 func TestSumAll(t *testing.T) {
-	got := SumAll([]int{1, 2, 3}, []int{4, 5, 6})
+	given := [][]int{{1, 2, 3}, {4, 5, 6}}
+	got := SumAll(given...)
 	want := []int{6, 15}
 
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %v, want %v", got, want)
+		t.Errorf("got %v, want %v, given %v", got, want, given)
 	}
 }
 
