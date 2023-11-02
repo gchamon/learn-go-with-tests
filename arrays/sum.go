@@ -16,6 +16,10 @@ func fillSlice(slice []int) []int {
 }
 
 func Sum(numbers []int) int {
+	if len(numbers) == 0 {
+		return 0
+	}
+
 	result := pipe.Slice(numbers).Reduce(sum)
 
 	return *result
