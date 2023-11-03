@@ -116,7 +116,7 @@ func TestSumAllIt(t *testing.T) {
 }
 
 func TestSumAllTailsIt(t *testing.T) {
-	checkSums := func(got, want []int) {
+	checkSums := func(t testing.TB, got, want []int) {
 		t.Helper()
 
 		if !reflect.DeepEqual(got, want) {
@@ -127,11 +127,11 @@ func TestSumAllTailsIt(t *testing.T) {
 	t.Run("make sums of some slices", func(t *testing.T) {
 		got := SumAllTailsIt([]int{1, 2, 3}, []int{4, 5, 6})
 		want := []int{5, 11}
-		checkSums(got, want)
+		checkSums(t, got, want)
 	})
 	t.Run("safely sum empty slices", func(t *testing.T) {
 		got := SumAllTailsIt([]int{}, []int{4, 5, 6})
 		want := []int{0, 11}
-		checkSums(got, want)
+		checkSums(t, got, want)
 	})
 }
