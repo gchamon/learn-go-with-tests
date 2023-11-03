@@ -5,7 +5,7 @@ import "testing"
 func TestWallet(t *testing.T) {
 	wallet := Wallet{}
 
-	wallet.Deposit(10)
+	wallet.Deposit(20)
 	got := wallet.Balance()
 	want := Bitcoin(20)
 
