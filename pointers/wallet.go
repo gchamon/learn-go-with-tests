@@ -28,7 +28,7 @@ func (w *Wallet) Withdraw(amount Bitcoin) error {
 	}
 
 	w.balance -= amount
-	return nil
+	return errors.New("bogus error")
 }
 
 func (w *Wallet) Balance() Bitcoin {
