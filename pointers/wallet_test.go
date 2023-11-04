@@ -3,8 +3,12 @@ package pointers
 import "testing"
 
 func TestWallet(t *testing.T) {
-	assertError := func(t testing.TB, err error) {
+	assertError := func(t testing.TB, err error, want string) {
 		t.Helper()
+
+		if err.Error() != want {
+			t.Errorf("got %q, want %q", err, want)
+		}
 
 		if err == nil {
 			t.Error("wanted an error but didn't get one")
@@ -34,7 +38,7 @@ func TestWallet(t *testing.T) {
 		wallet := Wallet{balance: startingBalance}
 		err := wallet.Withdraw(Bitcoin(100))
 
-		assertError(t, err)
+		assertError(t, err, "insufficient funds")
 		assertBalance(t, wallet, startingBalance)
 	})
 }
