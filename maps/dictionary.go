@@ -1,5 +1,7 @@
 package main
 
-func Search(dictionary map[string]string, entry string) string {
-	return dictionary[entry]
+type Dictionary map[string]string
+
+func (d *Dictionary) Search(entry string) string {
+	return (*d)[entry]
 }
