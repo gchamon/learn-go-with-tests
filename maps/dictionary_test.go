@@ -6,10 +6,7 @@ func TestSearch(t *testing.T) {
 	dictionary := Dictionary{"test": "this is just a test"}
 
 	t.Run("retrieve existing word", func(t *testing.T) {
-		got, _ := dictionary.Search("test")
-		want := "this is just a test"
-
-		assertStrings(t, got, want)
+		assertDefinition(t, dictionary, "test", "this is just a test")
 	})
 
 	t.Run("retrieve unknown word", func(t *testing.T) {
@@ -21,12 +18,14 @@ func TestSearch(t *testing.T) {
 func TestAdd(t *testing.T) {
 	dictionary := Dictionary{}
 	dictionary.Add("test", "this is just a test")
+	assertDefinition(t, dictionary, "test", "this is just a test")
+}
 
-	want := "this is just a test"
-	if got, err := dictionary.Search("test"); err != nil {
-		t.Fatal("should find added word:", err)
+func assertDefinition(t testing.TB, dict Dictionary, entry, definition string) {
+	if got, err := dict.Search(entry); err != nil {
+		t.Fatal("should find word:", err)
 	} else {
-		assertStrings(t, got, want)
+		assertStrings(t, got, definition)
 	}
 }
 
