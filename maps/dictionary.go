@@ -13,3 +13,7 @@ func (d *Dictionary) Search(entry string) (string, error) {
 		return "", ErrNotFound
 	}
 }
+
+func (d *Dictionary) Add(entry, definition string) {
+
+}
