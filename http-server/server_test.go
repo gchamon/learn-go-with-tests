@@ -23,8 +23,23 @@ func assertPlayerScore(t testing.TB, server *PlayerServer, playerName string, wa
 	}
 }
 
+type StubPlayerStore struct {
+	scores map[string]int
+}
+
+func (s *StubPlayerStore) GetPlayerScore(playerName string) int {
+	score := s.scores[playerName]
+	return score
+}
+
 func TestGETPlayers(t *testing.T) {
-	server := &PlayerServer{}
+	store := StubPlayerStore{
+		scores: map[string]int{
+			"Pepper": 20,
+			"Floyd":  10,
+		},
+	}
+	server := &PlayerServer{&store}
 
 	t.Run("returns Pepper's score", func(t *testing.T) {
 		assertPlayerScore(t, server, "Pepper", "20")

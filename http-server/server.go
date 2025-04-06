@@ -7,7 +7,7 @@ import (
 )
 
 type PlayerStore interface {
-	GetPlayerStore(name string) int
+	GetPlayerScore(name string) int
 }
 
 type PlayerServer struct {
@@ -17,10 +17,5 @@ type PlayerServer struct {
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
 
-	playerScores := map[string]string{
-		"Floyd":  "10",
-		"Pepper": "20",
-	}
-
-	fmt.Fprint(w, playerScores[player])
+	fmt.Fprint(w, p.store.GetPlayerScore(player))
 }
