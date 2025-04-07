@@ -8,12 +8,12 @@ import (
 
 type InMemoryStore struct{}
 
-func (i *InMemoryStore) GetPlayerScore(playerName string) int {
-	return 123
+func (i *InMemoryStore) GetPlayerScore(playerName string) (int, error) {
+	return 123, nil
 }
 
 type PlayerStore interface {
-	GetPlayerScore(name string) int
+	GetPlayerScore(name string) (int, error)
 }
 
 type PlayerServer struct {
@@ -23,5 +23,10 @@ type PlayerServer struct {
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
 
-	fmt.Fprint(w, p.store.GetPlayerScore(player))
+	score, err := p.store.GetPlayerScore(player)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+	} else {
+		fmt.Fprint(w, score)
+	}
 }

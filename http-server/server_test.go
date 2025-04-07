@@ -1,12 +1,13 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-func assertPlayerScore(t testing.TB, server *PlayerServer, playerName string, want string) {
+func getPlayerScore(server *PlayerServer, playerName string) *httptest.ResponseRecorder {
 	request, _ := http.NewRequest(
 		http.MethodGet,
 		"/players/"+playerName,
@@ -16,10 +17,22 @@ func assertPlayerScore(t testing.TB, server *PlayerServer, playerName string, wa
 
 	server.ServeHTTP(response, request)
 
+	return response
+}
+
+func assertPlayerScore(t testing.TB, server *PlayerServer, playerName string, want string) {
+	response := getPlayerScore(server, playerName)
+
+	gotStatus := response.Code
+	wantStatus := http.StatusOK
 	got := response.Body.String()
 
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
+	}
+
+	if gotStatus != wantStatus {
+		t.Errorf("got status %d, want %d", gotStatus, wantStatus)
 	}
 }
 
@@ -27,9 +40,13 @@ type StubPlayerStore struct {
 	scores map[string]int
 }
 
-func (s *StubPlayerStore) GetPlayerScore(playerName string) int {
-	score := s.scores[playerName]
-	return score
+func (s *StubPlayerStore) GetPlayerScore(playerName string) (int, error) {
+	if score, ok := s.scores[playerName]; ok {
+		return score, nil
+	} else {
+		err := errors.New("player doesn't exist")
+		return 0, err
+	}
 }
 
 func TestGETPlayers(t *testing.T) {
@@ -47,5 +64,16 @@ func TestGETPlayers(t *testing.T) {
 
 	t.Run("return Floyd's score", func(t *testing.T) {
 		assertPlayerScore(t, server, "Floyd", "10")
+	})
+
+	t.Run("returns 404 on missing players", func(t *testing.T) {
+		response := getPlayerScore(server, "Apollo")
+
+		got := response.Code
+		want := http.StatusNotFound
+
+		if got != want {
+			t.Errorf("got %d want %d", got, want)
+		}
 	})
 }
