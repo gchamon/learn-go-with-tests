@@ -1,15 +1,23 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
-type InMemoryStore struct{}
+type InMemoryStore struct {
+	scores map[string]int
+}
 
-func (i *InMemoryStore) GetPlayerScore(playerName string) (int, error) {
-	return 123, nil
+func (s *InMemoryStore) GetPlayerScore(playerName string) (int, error) {
+	if score, ok := s.scores[playerName]; ok {
+		return score, nil
+	} else {
+		err := errors.New("player doesn't exist")
+		return 0, err
+	}
 }
 
 type PlayerStore interface {

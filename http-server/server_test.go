@@ -1,11 +1,23 @@
 package main
 
 import (
-	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
+
+func postPlayerScore(server *PlayerServer, playerName string, score int) *httptest.ResponseRecorder {
+	request, _ := http.NewRequest(
+		http.MethodPost,
+		"/players/"+playerName,
+		nil,
+	)
+	response := httptest.NewRecorder()
+
+	server.ServeHTTP(response, request)
+
+	return response
+}
 
 func getPlayerScore(server *PlayerServer, playerName string) *httptest.ResponseRecorder {
 	request, _ := http.NewRequest(
@@ -36,21 +48,8 @@ func assertPlayerScore(t testing.TB, server *PlayerServer, playerName string, wa
 	}
 }
 
-type StubPlayerStore struct {
-	scores map[string]int
-}
-
-func (s *StubPlayerStore) GetPlayerScore(playerName string) (int, error) {
-	if score, ok := s.scores[playerName]; ok {
-		return score, nil
-	} else {
-		err := errors.New("player doesn't exist")
-		return 0, err
-	}
-}
-
 func TestGETPlayers(t *testing.T) {
-	store := StubPlayerStore{
+	store := InMemoryStore{
 		scores: map[string]int{
 			"Pepper": 20,
 			"Floyd":  10,
@@ -73,7 +72,25 @@ func TestGETPlayers(t *testing.T) {
 		want := http.StatusNotFound
 
 		if got != want {
-			t.Errorf("got %d want %d", got, want)
+			t.Errorf("got status %d want %d", got, want)
+		}
+	})
+}
+
+func TestStoreWins(t *testing.T) {
+	store := InMemoryStore{
+		map[string]int{},
+	}
+	server := &PlayerServer{&store}
+
+	t.Run("returns accepted on POST", func(t *testing.T) {
+		response := postPlayerScore(server, "Pepper", 20)
+
+		got := response.Code
+		want := http.StatusAccepted
+
+		if got != want {
+			t.Errorf("got status %d want %d", got, want)
 		}
 	})
 }
