@@ -6,6 +6,12 @@ import (
 	"strings"
 )
 
+type InMemoryStore struct{}
+
+func (i *InMemoryStore) GetPlayerScore(playerName string) int {
+	return 123
+}
+
 type PlayerStore interface {
 	GetPlayerScore(name string) int
 }
